@@ -1,2 +1,28 @@
 # Définir cette configuration Compose afin de lancer l'application
 # Make Me Watch en production.
+
+
+version: '3.8'
+
+services:
+  # Définition du service serveur (API)
+  server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+  # Définition du service client (SPA)
+  client:
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+    ports:
+      - "80:80"
+    environment:
+      - API_BASE_URL=http://server:3000
+    depends_on:
+      - server
+    restart: unless-stopped
