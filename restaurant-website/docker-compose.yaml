@@ -1,2 +1,31 @@
 # Définir cette configuration Compose afin de lancer l'application
 # Grilli en production.
+version: '3.8'
+
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./src:/var/www/html
+    environment:
+      - APP_ENV=prod
+    networks:
+      - app-network
+
+  php:
+    image: php:latest
+    container_name: php
+    volumes:
+      - ./src:/var/www/html
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
