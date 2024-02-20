@@ -1,40 +1,40 @@
-# Use an official Nginx base image
-FROM nginx:latest
+# Use an official PHP image with necessary extensions
+FROM php:8.3-fpm
 
-COPY . /var/www/html/
+WORKDIR /var/www/html/
 
-WORKDIR /var/www/html
+COPY assets assets
+COPY bin bin
+COPY config config
+COPY src src
+COPY templates templates
+COPY public public
+COPY composer.json .
 
-COPY nginx.conf /etc/nginx/nginx.conf
+RUN apt-get -y update \
+&& apt-get install -y libicu-dev \
+&& docker-php-ext-configure intl \
+&& docker-php-ext-install intl
 
-RUN service nginx restart
+# Install additional dependencies if needed
+RUN apt-get update && apt-get install -y \
+    unzip \
+    p7zip-full \
+    git \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update \
-    && apt install ca-certificates apt-transport-https software-properties-common lsb-release -y \
-    && curl -sSL https://packages.sury.org/php/README.txt | bash -x \
-    && apt-get update \
-    && apt install php8.3 php8.3-fpm php8.3-cli php8.3-xml php8.3-curl php8.3-intl -y \
-    && php -v \
-    && service php8.3-fpm start \
-    && apt-get install -y zip unzip p7zip-full \
-    && apt-get install -y git 
-
-ENV APP_ENV=prod
-
-RUN echo "listen.mode = 0660" >> /etc/php/8.3/fpm/pool.d/www.conf \
-    && service php8.3-fpm restart \
-    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-    && chmod u+w /var/www \
-    && chown -R www-data:www-data /var/www
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+    && chmod u+wr /var/www/html \
+    && chown -R www-data:www-data /var/www/html
 
 USER www-data
 
 # For now composer install is running without the --no-dev flag, this is because the app seems to be starting with the dev environment even when the APP_ENV is set to prod
 RUN composer update \
-&& composer install --optimize-autoloader \ 
-&& php bin/console asset-map:compile \
+&& composer install --no-dev --optimize-autoloader \ 
+&& php bin/console asset-map:compile --env=prod \
 && php bin/console cache:clear --env=prod
 
 USER root
 
-EXPOSE 80
+EXPOSE 9000
