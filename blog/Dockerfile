@@ -10,25 +10,21 @@ RUN apt update && apt install -y libpq-dev
 WORKDIR /blog
 
 #ENV VARIABLES
-ARG DATABASE_URL
-ENV DATABASE_URL="postgres://thomas:admin@0.0.0.0:5432/blog"
+# ARG DATABASE_URL
+# ENV DATABASE_URL="postgres://thomas:admin@0.0.0.0:5432/blog"
 
-ARG ROCKET_ADDRESS
-ENV ROCKET_ADDRESS=${ROCKET_ADDRESS}
+# ARG ROCKET_ADDRESS
+# ENV ROCKET_ADDRESS=${ROCKET_ADDRESS}
 
 #GET THE APP FILES
 COPY . ./
 
+RUN cargo install --path ./
 
-#CMD cargo install --path ./
-
-#CMD cp /usr/local/cargo/bin/blog ./blog
+RUN cp /usr/local/cargo/bin/blog ./blog
 
 #DOWNLOADING TOOLS
 RUN cargo install diesel_cli --no-default-features --features postgres
 
 #RUNS MIGRATIONS
-RUN diesel migration run
-
-#CMD ./blog 
-RUN cargo run
+CMD ["bash", "-c", "sleep 2 && diesel migration run && ./blog"]
