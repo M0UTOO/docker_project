@@ -30,10 +30,10 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 USER www-data
 
 # For now composer install is running without the --no-dev flag, this is because the app seems to be starting with the dev environment even when the APP_ENV is set to prod
-RUN composer update \
-&& composer install --no-dev --optimize-autoloader \ 
-&& php bin/console asset-map:compile --env=prod \
-&& php bin/console cache:clear --env=prod
+RUN composer update
+RUN composer install --no-dev --optimize-autoloader
+RUN php bin/console asset-map:compile --env=prod
+RUN php bin/console cache:clear --env=prod
 
 USER root
 
