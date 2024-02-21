@@ -4,10 +4,10 @@ version: '3.8'
 
 services:
   nginx:
-    image: nginx:latest
-    container_name: resto-grilli
+    image: nginx:alpine
+    container_name: resto-grilli-nginx
     ports:
-      - "80:80"
+      - "${PORT_NGINX}:80"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - .:/var/www/html
@@ -18,7 +18,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: php-fpm
+    container_name: resto-grilli-php
     volumes:
       - .:/var/www/html
     environment:

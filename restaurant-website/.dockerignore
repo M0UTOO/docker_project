@@ -1,0 +1,14 @@
+/.docker
+/tests
+/var
+/vendor
+/.env.test
+/.gitignore
+/composer.lock
+/docker-composer.yml
+/Dockerfile
+/importmap.php
+/nginx.conf
+/phpunit.xml.dist
+/README.md
+/symfony.lock
