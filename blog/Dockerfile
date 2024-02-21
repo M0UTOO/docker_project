@@ -19,7 +19,5 @@ RUN cp /usr/local/cargo/bin/blog ./blog
 #DOWNLOADING TOOLS
 RUN cargo install diesel_cli --no-default-features --features postgres
 
-EXPOSE 8000
-
 #RUNS MIGRATIONS
 CMD ["bash", "-c", "sleep 2 && diesel migration run && ./blog"]
