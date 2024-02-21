@@ -22,13 +22,4 @@ ENV API_BASE_URL=${API_BASE_URL}
 # Construire l'application
 RUN npm run build
 
-# Etape 2: Configurer Nginx pour servir l'application
-FROM nginx:stable-alpine AS production
-
-# Copier les fichiers construits depuis l'étape de construction vers le répertoire de travail de Nginx
-COPY --from=build /app/build /usr/share/nginx/html
-
-# Exposer le port
-EXPOSE 80
-
-# Lancer Nginx; pas besoin de commande CMD car l'image de base Nginx en a déjà une pour démarrer le serveur.
+CMD ["node", "build/index.js"]

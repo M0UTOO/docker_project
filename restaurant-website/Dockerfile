@@ -35,7 +35,6 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 USER www-data
 
 # Install the Composer dependencies
-RUN composer update
 RUN composer install --no-dev --optimize-autoloader
 RUN php bin/console asset-map:compile --env=prod
 RUN php bin/console cache:clear --env=prod
