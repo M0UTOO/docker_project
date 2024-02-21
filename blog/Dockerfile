@@ -19,12 +19,15 @@ WORKDIR /blog
 #GET THE APP FILES
 COPY . ./
 
-RUN cargo install --path ./
+#RUN cargo install --path ./
 
-RUN cp /usr/local/cargo/bin/blog ./blog
+#RUN cp /usr/local/cargo/bin/blog ./blog
 
 #DOWNLOADING TOOLS
 RUN cargo install diesel_cli --no-default-features --features postgres
 
+
+EXPOSE 8000
+
 #RUNS MIGRATIONS
-CMD ["bash", "-c", "sleep 2 && diesel migration run && ./blog"]
+CMD ["bash", "-c", "sleep 2 && diesel migration run && cargo run"]
