@@ -28,10 +28,7 @@ FROM nginx:stable-alpine AS production
 # Copier les fichiers construits depuis l'étape de construction vers le répertoire de travail de Nginx
 COPY --from=build /app/build /usr/share/nginx/html
 
-# (Optionnel) Copier une configuration Nginx person<<nalisée si nécessaire
-# COPY path/to/your/nginx.conf /etc/nginx/nginx.conf
-
-# Exposer le port (Nginx écoute sur le port 80 par défaut)
+# Exposer le port
 EXPOSE 80
 
 # Lancer Nginx; pas besoin de commande CMD car l'image de base Nginx en a déjà une pour démarrer le serveur.
