@@ -10,11 +10,6 @@ services:
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - ROCKET_ADDRESS=${ROCKET_ADDRESS}
-    links:
-      - "db"
-    depends_on:
-      db:
-        condition: service_healthy
   db:
     image: postgres:16-alpine
     ports:
@@ -23,11 +18,6 @@ services:
       POSTGRES_DB: blog
       POSTGRES_PASSWORD: admin
       POSTGRES_USER: thomas
-    healthcheck:        
-      test: ["CMD-SHELL", "sh -c 'pg_isready -h localhost -U thomas -d blog'"]
-      interval: 10s
-      timeout: 5s
-      retries: 10   
     volumes:
         - db_data:/var/lib/postgresql/data
 

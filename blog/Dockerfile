@@ -20,5 +20,5 @@ RUN cargo install --path ./
 RUN cp /usr/local/cargo/bin/blog ./blog
 
 #RUNS MIGRATIONS AND THE APP    
-RUN  diesel migration run
-RUN  ./blog
+CMD  diesel migration run
+CMD  ./blog
