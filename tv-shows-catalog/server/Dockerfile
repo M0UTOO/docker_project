@@ -1,25 +1,25 @@
 # Créer un Dockerfile pour cette application en mode production
 
 # Utiliser l'image officielle Node.js LTS comme base
-FROM node:lts AS builder
+FROM node:alpine AS builder
 
 # Définir le répertoire de travail dans l'image
 WORKDIR /app
 
 # Copier les fichiers de dépendances
-COPY server/package*.json ./
+COPY package*.json ./
 
 # Installer les dépendances
 RUN npm install
 
 # Copier le reste des fichiers de l'application
-COPY server/ .
+COPY / .
 
 # Construire l'application pour la production
 RUN npm run build
 
 # Étape de production
-FROM node:lts AS production
+FROM node:alpine AS production
 
 # Définir le répertoire de travail pour l'étape de production
 WORKDIR /app
